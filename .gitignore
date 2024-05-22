@@ -1,3 +1,5 @@
 bin/
 obj/
-/.vs/DapperProj.API/v17
+*.db-shm
+*.db-wal
+/.vs

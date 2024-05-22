@@ -3,4 +3,37 @@
 GET {{API_HostAddress}}/clients/
 Accept: application/json
 
-###
+### Post request to create a new client
+POST https://localhost:7290/Clients
+Accept: */*
+Content-Type: application/json
+
+{
+  "id": 0,
+  "name": "string",
+  "gender": "string",
+  "birthdate": "string",
+  "address": "string",
+  "emailAddress": "string",
+  "contactNumber": "string"
+}
+### update clienct
+PUT https://localhost:7290/Clients/34
+Accept: */*
+Content-Type: application/json
+
+{
+  "id": 34,
+  "name": "name",
+  "gender": "ggg",
+  "birthdate": "sgggf",
+  "address": "gga",
+  "emailAddress": "emagil@email.com",
+  "contactNumber": "1231231"
+}
+
+### delete client
+DELETE https://localhost:7290/Clients/31
+
+### delete client
+GET http://localhost:5062/Contribution?clientId=1
