@@ -39,30 +39,31 @@ namespace Proj.API.Repositories
             }
         }
 
-        public async Task<int> CreateClient(Client client)
+        public async Task<Client> CreateClient(Client client)
         {
-            var query = @"INSERT INTO Clients (Name, Gender, Birthdate, Address, EmailAddress, ContactNumber) 
-                      VALUES (@Name, @Gender, @Birthdate, @Address, @EmailAddress, @ContactNumber);
-                      SELECT last_insert_rowid();";
+            var query = @" INSERT INTO Clients (Name, Gender, Birthdate, Address, EmailAddress, ContactNumber) 
+                        VALUES (@Name, @Gender, @Birthdate, @Address, @EmailAddress, @ContactNumber);
+                        SELECT * FROM Clients WHERE id = last_insert_rowid();";
 
             using (var connection = _context.CreateConnection())
             {
-                var clientId = await connection.ExecuteScalarAsync<int>(query, client);
+                var clientId = await connection.QuerySingleOrDefaultAsync<Client>(query, client);
                 return clientId;
             }
         }
 
-        public async Task<bool> UpdateClient(Client client)
+        public async Task<Client> UpdateClient(Client client)
         {
             var query = @"UPDATE Clients 
                       SET Name = @Name, Gender = @Gender, Birthdate = @Birthdate, 
                           Address = @Address, EmailAddress = @EmailAddress, ContactNumber = @ContactNumber
-                      WHERE Id = @Id";
+                      WHERE Id = @Id;
+                      SELECT * FROM Clients WHERE id = @Id;";
 
             using (var connection = _context.CreateConnection())
             {
-                var rowsAffected = await connection.ExecuteAsync(query, client);
-                return rowsAffected > 0;
+                var updatedClient = await connection.QueryFirstOrDefaultAsync<Client>(query, client);
+                return updatedClient;
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Proj.API.Models;
@@ -62,8 +63,8 @@ namespace Proj.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest("Invalid model object");
 
-            var clientId = await _repository.CreateClient(client);
-            return CreatedAtAction(nameof(GetClientById), new { id = clientId }, client);
+            var insertedClient = await _repository.CreateClient(client);
+            return CreatedAtAction(nameof(GetClientById), new { id = insertedClient.Id }, insertedClient);
         }
         catch (Exception ex)
         {
@@ -85,11 +86,11 @@ namespace Proj.API.Controllers
             if (id != client.Id)
                 return BadRequest("Client ID mismatch");
 
-            var isUpdated = await _repository.UpdateClient(client);
-            if (!isUpdated)
+            var result = await _repository.UpdateClient(client);
+            if (result is null)
                 return NotFound();
 
-            return NoContent();
+            return Ok(result);
         }
         catch (Exception ex)
         {
