@@ -8,11 +8,11 @@ using Proj.API.Configurations;
 
 namespace Proj.API.Data
 {
-    public class DapperContext
+    public class DapperContext : IDapperContext
     {
         private IDatabaseProvider _databaseProvider;
         public DapperContext(IDatabaseProvider databaseProvider)
-        {   
+        {
             _databaseProvider = databaseProvider;
         }
 
