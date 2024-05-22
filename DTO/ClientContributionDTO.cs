@@ -7,6 +7,6 @@ namespace Proj.API.DTO
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public double TotalContribution { get; set; }
-        public List<Contribution> contributions { get; set; }
+        public List<Contribution>? Contributions { get; set; } = null;
     }
 }
