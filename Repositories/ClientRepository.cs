@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.AspNetCore.Components;
 using Proj.API.Data;
 using Proj.API.Models;
 
@@ -35,7 +36,7 @@ namespace Proj.API.Repositories
             using (var connection = _context.CreateConnection())
             {
                 var client = await connection.QuerySingleOrDefaultAsync<Client>(query, new { Id = id });
-                return client;
+                return client!;
             }
         }
 
@@ -47,8 +48,8 @@ namespace Proj.API.Repositories
 
             using (var connection = _context.CreateConnection())
             {
-                var clientId = await connection.QuerySingleOrDefaultAsync<Client>(query, client);
-                return clientId;
+                var createdClient = await connection.QuerySingleOrDefaultAsync<Client>(query, client);
+                return createdClient!;
             }
         }
 
@@ -63,7 +64,7 @@ namespace Proj.API.Repositories
             using (var connection = _context.CreateConnection())
             {
                 var updatedClient = await connection.QueryFirstOrDefaultAsync<Client>(query, client);
-                return updatedClient;
+                return updatedClient!;
             }
         }
 

@@ -11,13 +11,13 @@ using Proj.API.Repositories;
 
 namespace Proj.API.Controllers
 {
-    [Route("[controller]")]
-    public class ClientsController : ControllerBase
+    [Route("api/[controller]")]
+    public class ClientController : ControllerBase
     {
         private readonly ClientRepository _clientRepository;
         private readonly ContributionRepository _contributionRepository;
 
-        public ClientsController(ClientRepository clientRepository, ContributionRepository contributionRepository)
+        public ClientController(ClientRepository clientRepository, ContributionRepository contributionRepository)
         {
             _clientRepository = clientRepository;
             _contributionRepository = contributionRepository;

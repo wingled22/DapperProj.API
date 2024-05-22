@@ -13,6 +13,17 @@ namespace Proj.API.Repositories
             _context = context;
         }
 
+        public async Task<Contribution> SaveContribution(Contribution contribution){
+            const string query = @"Insert into Contributions (Id,Amount, ClientId, DateCreated) 
+                                values (@Id, @Amount, @ClientId, @DateCreated);";
+            contribution.Id = Guid.NewGuid();
+            contribution.DateCreated = DateTime.Now.Date;
+            using(var connection = _context.CreateConnection()){
+                var createdContribution = await connection.QuerySingleOrDefaultAsync<Contribution>(query, contribution);
+                return createdContribution!;
+            }
+        }
+
         public async Task<IEnumerable<Contribution>> GetContributions(int clientId)
         {
             const string query = @"select * from Contributions where ClientId = @clientId";
