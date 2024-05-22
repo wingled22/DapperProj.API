@@ -37,3 +37,6 @@ DELETE https://localhost:7290/Clients/31
 
 ### delete client
 GET http://localhost:5062/Contribution?clientId=1
+
+### 
+GET http://localhost:5062/clients/contribution?clientId=1
