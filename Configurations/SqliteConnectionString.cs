@@ -9,9 +9,7 @@ namespace Proj.API.Configurations
     {
         public string ConnectionString { get; set; } = null!;
 
-        public void Validate(){
-            if (string.IsNullOrWhiteSpace(ConnectionString))
-                throw new ArgumentNullException(nameof(ConnectionString));
-        }
+        public void Validate() => ArgumentException.ThrowIfNullOrWhiteSpace(nameof(ConnectionString));
+        
     }
 }
