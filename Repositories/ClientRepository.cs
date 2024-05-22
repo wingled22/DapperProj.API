@@ -10,9 +10,9 @@ namespace Proj.API.Repositories
 {
     public class ClientRepository
     {
-        private readonly DapperContext _context;
+        private readonly IDapperContext _context;
 
-        public ClientRepository(DapperContext context)
+        public ClientRepository(IDapperContext context)
         {
             _context = context;
         }

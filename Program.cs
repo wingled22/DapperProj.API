@@ -13,11 +13,11 @@ var configuration = builder.Configuration;
 
 
 
-//var sqliteConnection = configuration.GetSection(nameof(SqliteConnectionString)).Get<SqliteConnectionString>()!;
-//sqliteConnection.Validate();
-
-var secretConnection = await GetSecret<SqliteConnectionString>();
+var secretConnection = configuration.GetSection(nameof(SqliteConnectionString)).Get<SqliteConnectionString>()!;
 secretConnection.Validate();
+
+// var secretConnection = await GetSecret<SqliteConnectionString>();
+// secretConnection.Validate();
 
 builder.Services.AddSingleton<IDatabaseProvider>(secretConnection);
 
@@ -43,35 +43,35 @@ app.UseAuthorization();
 app.MapControllers();
 app.Run();
 
-//TODO : replicate cati format of configs
-static async Task<T> GetSecret<T>()
-{
-    string secretName = "test-secret";
-    string region = "us-west-2";
+// //TODO : replicate cati format of configs
+// static async Task<T> GetSecret<T>()
+// {
+//     string secretName = "test-secret";
+//     string region = "us-west-2";
 
-    IAmazonSecretsManager client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region));
+//     IAmazonSecretsManager client = new AmazonSecretsManagerClient(RegionEndpoint.GetBySystemName(region));
 
-    GetSecretValueRequest request = new GetSecretValueRequest
-    {
-        SecretId = secretName,
-        VersionStage = "AWSCURRENT", 
-    };
+//     GetSecretValueRequest request = new GetSecretValueRequest
+//     {
+//         SecretId = secretName,
+//         VersionStage = "AWSCURRENT", 
+//     };
 
-    GetSecretValueResponse response;
+//     GetSecretValueResponse response;
 
-    try
-    {
-        response = await client.GetSecretValueAsync(request);
-    }
-    catch (Exception e)
-    {
-        // For a list of the exceptions thrown, see
-        // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-        throw e;
-    }
+//     try
+//     {
+//         response = await client.GetSecretValueAsync(request);
+//     }
+//     catch (Exception e)
+//     {
+//         // For a list of the exceptions thrown, see
+//         // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+//         throw e;
+//     }
 
-    string secret = response.SecretString;
+//     string secret = response.SecretString;
 
-    return JsonSerializer.Deserialize<T>(secret)!;
+//     return JsonSerializer.Deserialize<T>(secret)!;
 
-}
+// }
