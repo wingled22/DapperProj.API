@@ -13,107 +13,122 @@ namespace Proj.API.Controllers
 {
     [Route("[controller]")]
     public class ClientsController : ControllerBase
-{
-    private readonly ClientRepository _repository;
-
-    public ClientsController(ClientRepository repository)
     {
-        _repository = repository;
-    }
+        private readonly ClientRepository _clientRepository;
+        private readonly ContributionRepository _contributionRepository;
 
-    [HttpGet]
-    public async Task<IActionResult> GetClients()
-    {
-        try
+        public ClientsController(ClientRepository clientRepository, ContributionRepository contributionRepository)
         {
-            var clients = await _repository.GetClients();
-            return Ok(clients);
+            _clientRepository = clientRepository;
+            _contributionRepository = contributionRepository;
         }
-        catch (Exception ex)
+
+        [HttpGet]
+        public async Task<IActionResult> GetClients()
         {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            try
+            {
+                var clients = await _clientRepository.GetClients();
+                return Ok(clients);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
-    }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetClientById(int id)
-    {
-        try
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetClientById(int id)
         {
-            var client = await _repository.GetClientById(id);
-            if (client == null)
-                return NotFound();
+            try
+            {
+                var client = await _clientRepository.GetClientById(id);
+                if (client == null)
+                    return NotFound();
 
-            return Ok(client);
+                return Ok(client);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+        [HttpGet("contribution")]
+        public async Task<IActionResult> GetClientsContributionSummary(int clientId){
+            try{
+                if (clientId == 0)
+                    return BadRequest("Invalid clientId");
+                var contributions = await _contributionRepository.GetClientContributionSummary(clientId);
+                return Ok(contributions);
+            }
+            catch(Exception ex){
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateClient([FromBody] Client client)
         {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
+            try
+            {
+                if (client == null)
+                    return BadRequest("Client object is null");
 
-    [HttpPost]
-    public async Task<IActionResult> CreateClient([FromBody] Client client)
-    {
-        try
+                if (!ModelState.IsValid)
+                    return BadRequest("Invalid model object");
+
+                var insertedClient = await _clientRepository.CreateClient(client);
+                return CreatedAtAction(nameof(GetClientById), new { id = insertedClient.Id }, insertedClient);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateClient(int id, [FromBody] Client client)
         {
-            if (client == null)
-                return BadRequest("Client object is null");
+            try
+            {
+                if (client == null)
+                    return BadRequest("Client object is null");
 
-            if (!ModelState.IsValid)
-                return BadRequest("Invalid model object");
+                if (!ModelState.IsValid)
+                    return BadRequest("Invalid model object");
 
-            var insertedClient = await _repository.CreateClient(client);
-            return CreatedAtAction(nameof(GetClientById), new { id = insertedClient.Id }, insertedClient);
+                if (id != client.Id)
+                    return BadRequest("Client ID mismatch");
+
+                var result = await _clientRepository.UpdateClient(client);
+                if (result is null)
+                    return NotFound();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteClient(int id)
         {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
+            try
+            {
+                var isDeleted = await _clientRepository.DeleteClient(id);
+                if (!isDeleted)
+                    return NotFound();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
-    }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateClient(int id, [FromBody] Client client)
-    {
-        try
-        {
-            if (client == null)
-                return BadRequest("Client object is null");
-
-            if (!ModelState.IsValid)
-                return BadRequest("Invalid model object");
-
-            if (id != client.Id)
-                return BadRequest("Client ID mismatch");
-
-            var result = await _repository.UpdateClient(client);
-            if (result is null)
-                return NotFound();
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteClient(int id)
-    {
-        try
-        {
-            var isDeleted = await _repository.DeleteClient(id);
-            if (!isDeleted)
-                return NotFound();
-
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error: {ex.Message}");
-        }
-    }
-}    
+    }    
     
 }
