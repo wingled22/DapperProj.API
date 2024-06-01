@@ -34,7 +34,8 @@ namespace Proj.API.Controllers
             var result = await _contributionRepository.SaveContribution(contribution);
             if (result == null)
                 return StatusCode(500, "Something happened try again later");
-            return CreatedAtAction("GetContribution", new { id = contribution.Id }, contribution);
+
+            return Ok(result);
         }
     }
 }
