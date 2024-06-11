@@ -1,10 +1,10 @@
 @API_HostAddress = http://localhost:5062
 
-GET {{API_HostAddress}}/clients/
+GET {{API_HostAddress}}/api/client/
 Accept: application/json
 
 ### Post request to create a new client
-POST https://localhost:7290/Clients
+POST https://localhost:7290/api/Client
 Accept: */*
 Content-Type: application/json
 
@@ -18,7 +18,7 @@ Content-Type: application/json
   "contactNumber": "string"
 }
 ### update clienct
-PUT https://localhost:7290/Clients/34
+PUT https://localhost:7290/api/Client/34
 Accept: */*
 Content-Type: application/json
 
@@ -33,10 +33,22 @@ Content-Type: application/json
 }
 
 ### delete client
-DELETE https://localhost:7290/Clients/31
+DELETE https://localhost:7290/api/Client/31
 
 ### delete client
-GET http://localhost:5062/Contribution?clientId=1
+GET http://localhost:5062/api/Contribution/client/2
 
 ### 
-GET http://localhost:5062/clients/contribution?clientId=1
+GET http://localhost:5062/api/client/contribution?clientId=1
+
+### Post CONTRIB
+POST http://localhost:5062/api/Contribution
+Accept: */*
+Content-Type: application/json
+
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "amount": 1000,
+  "clientId": 2,
+  "dateCreated": "2024-05-22T10:27:40.955Z"
+}

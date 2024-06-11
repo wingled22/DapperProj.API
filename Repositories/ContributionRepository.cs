@@ -14,8 +14,9 @@ namespace Proj.API.Repositories
         }
 
         public async Task<Contribution> SaveContribution(Contribution contribution){
-            const string query = @"Insert into Contributions (Id,Amount, ClientId, DateCreated) 
-                                values (@Id, @Amount, @ClientId, @DateCreated);";
+            const string query = @"INSERT INTO Contributions (Id,Amount, ClientId, DateCreated) 
+                                VALUES (@Id, @Amount, @ClientId, @DateCreated);
+                                SELECT * FROM Contributions WHERE Id= last_insert_rowid()";
             contribution.Id = Guid.NewGuid();
             contribution.DateCreated = DateTime.Now.Date;
             using(var connection = _context.CreateConnection()){
@@ -26,7 +27,7 @@ namespace Proj.API.Repositories
 
         public async Task<IEnumerable<Contribution>> GetContributions(int clientId)
         {
-            const string query = @"select * from Contributions where ClientId = @clientId";
+            const string query = @"SELECT * FROM Contributions WHERE ClientId = @clientId";
 
             using(var connection =  _context.CreateConnection())
             {
