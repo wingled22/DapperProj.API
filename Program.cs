@@ -7,6 +7,8 @@ using Proj.API.Repositories;
 using Proj.API.TypeHandlers;
 using Amazon;
 using System.Text.Json;
+using DapperProj.API.Logic;
+using DapperProj.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -24,6 +26,10 @@ builder.Services.AddSingleton<IDatabaseProvider>(secretConnection);
 builder.Services.AddSingleton<IDapperContext, DapperContext>();
 builder.Services.AddSingleton<ClientRepository>();
 builder.Services.AddSingleton<ContributionRepository>();
+
+builder.Services.AddSingleton<ExceptionsSampleLogic>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -47,8 +53,9 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseExceptionHandler();
 app.MapControllers();
-app.Run();
+await app.RunAsync();
 
 // //TODO : replicate cati format of configs
 // static async Task<T> GetSecret<T>()
