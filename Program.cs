@@ -28,7 +28,9 @@ builder.Services.AddSingleton<ClientRepository>();
 builder.Services.AddSingleton<ContributionRepository>();
 
 builder.Services.AddSingleton<ExceptionsSampleLogic>();
+
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 builder.Services.AddProblemDetails();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

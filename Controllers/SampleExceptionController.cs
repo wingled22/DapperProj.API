@@ -21,11 +21,12 @@ namespace DapperProj.API.Controllers
 
         [HttpGet]
         public IActionResult GetAction()
-        {   
+        {
             _exceptionsSampleLogic.ReturnException(null!);
             return View();
         }
 
-       
+
     }
+
 }
